@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Slider from "../components/Slider";
 import { SlFire } from "react-icons/sl";
 import "../styles/home.css";
 import ProductCarousel from "../components/ProductCarousel";
 import ProductModal from "../components/ProductModal";
-import { hotProducts, limitedProducts } from "../data/products";
 import { MdOutlineTimer } from "react-icons/md";
 
 export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [hotProducts, setHotProducts] = useState([]);
+  const [limitedProducts, setLimitedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setHotProducts(data.filter((p) => p.is_hot === true));
+        setLimitedProducts(data.filter((p) => p.is_limited === true));
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>載入中...</p>;
 
   return (
     <div className="home">

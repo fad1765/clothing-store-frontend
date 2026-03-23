@@ -1,10 +1,12 @@
 import { useCart } from "../context/useCart";
+import { useAuth } from "../context/useAuth";
 import { useNavigate } from "react-router-dom";
 import "../styles/cartdrawer.css";
 
 export default function CartDrawer() {
   const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, totalPrice } =
     useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   if (!isCartOpen) return null;
@@ -35,7 +37,7 @@ export default function CartDrawer() {
                 </div>
                 <button
                   className="cart-item-remove"
-                  onClick={() => removeFromCart(item.id, item.size)}
+                  onClick={() => removeFromCart(item.id, item.size, user?.id)}
                 >
                   ✕
                 </button>

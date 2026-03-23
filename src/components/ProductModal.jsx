@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCart } from "../context/useCart";
+import { useAuth } from "../context/useAuth";
 import "../styles/productmodal.css";
 
 const SIZES = ["S", "M", "L", "XL"];
@@ -10,6 +11,7 @@ export default function ProductModal({ product, onClose }) {
   const [selectedSize, setSelectedSize] = useState(null);
   const [sizeError, setSizeError] = useState(false);
   const { addToCart } = useCart();
+  const { user } = useAuth(); // 取得目前登入的使用者
 
   if (!product) return null;
 
@@ -17,9 +19,23 @@ export default function ProductModal({ product, onClose }) {
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => {
-      if (i < Math.floor(rating)) return <span key={i} className="star full">★</span>;
-      if (i < rating) return <span key={i} className="star half">★</span>;
-      return <span key={i} className="star empty">☆</span>;
+      if (i < Math.floor(rating))
+        return (
+          <span key={i} className="star full">
+            ★
+          </span>
+        );
+      if (i < rating)
+        return (
+          <span key={i} className="star half">
+            ★
+          </span>
+        );
+      return (
+        <span key={i} className="star empty">
+          ☆
+        </span>
+      );
     });
   };
 
@@ -28,14 +44,17 @@ export default function ProductModal({ product, onClose }) {
       setSizeError(true);
       return;
     }
-    addToCart(product, quantity, hasSize ? selectedSize : "固定尺寸");
+    // 傳入user.id沒登入為 null
+    addToCart(product, quantity, hasSize ? selectedSize : "固定尺寸", user?.id);
     onClose();
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
 
         <div className="modal-body">
           <div className="modal-image-wrapper">
@@ -60,7 +79,6 @@ export default function ProductModal({ product, onClose }) {
               </span>
             </p>
 
-            {/* 👈 只有 clothing 和 pant 才顯示尺寸 */}
             {hasSize && (
               <div className="modal-size">
                 <span>尺寸：</span>
@@ -85,9 +103,21 @@ export default function ProductModal({ product, onClose }) {
             {product.stock > 0 && (
               <div className="modal-quantity">
                 <span>數量：</span>
-                <button onClick={() => setQuantity((prev) => Math.max(1, prev - 1))} disabled={quantity <= 1}>−</button>
+                <button
+                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
                 <span className="qty-number">{quantity}</span>
-                <button onClick={() => setQuantity((prev) => Math.min(product.stock, prev + 1))} disabled={quantity >= product.stock}>+</button>
+                <button
+                  onClick={() =>
+                    setQuantity((prev) => Math.min(product.stock, prev + 1))
+                  }
+                  disabled={quantity >= product.stock}
+                >
+                  +
+                </button>
               </div>
             )}
 

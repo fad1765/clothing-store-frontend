@@ -61,14 +61,55 @@ export default function Cart() {
     return newErrors;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    setSubmitted(true);
-    setCartItems([]);
+
+    // 把購物車商品整理成 API 需要的格式
+    const items = cartItems.map((item) => ({
+      product_id: item.product_id || item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      size: item.size,
+    }));
+
+    try {
+      const res = await fetch("http://localhost:8000/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user?.id || null,
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          delivery: form.delivery,
+          city: form.city || null,
+          district: form.district || null,
+          address: form.address || null,
+          payment: form.payment,
+          total_price: totalPrice,
+          items,
+        }),
+      });
+
+      if (res.ok) {
+        // 清空前端購物車
+        setCartItems([]);
+        // 如果未登入，清空 localStorage
+        if (!user) {
+          localStorage.removeItem("guest_cart");
+        }
+        setSubmitted(true);
+      } else {
+        alert("訂單送出失敗，請再試一次");
+      }
+    } catch {
+      alert("伺服器連線失敗，請再試一次");
+    }
   };
 
   if (submitted) {
@@ -113,6 +154,7 @@ export default function Cart() {
                         item.id,
                         item.size,
                         Math.max(1, item.quantity - 1),
+                        user?.id,
                       )
                     }
                     disabled={item.quantity <= 1}
@@ -122,7 +164,12 @@ export default function Cart() {
                   <span>{item.quantity}</span>
                   <button
                     onClick={() =>
-                      updateQuantity(item.id, item.size, item.quantity + 1)
+                      updateQuantity(
+                        item.id,
+                        item.size,
+                        item.quantity + 1,
+                        user?.id,
+                      )
                     }
                   >
                     +
@@ -135,7 +182,7 @@ export default function Cart() {
                 </p>
                 <button
                   className="cart-page-remove"
-                  onClick={() => removeFromCart(item.id, item.size)}
+                  onClick={() => removeFromCart(item.id, item.size, user?.id)}
                 >
                   ✕
                 </button>

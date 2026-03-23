@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useAuth } from "../context/useAuth";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
+import SuccessModal from "../components/SuccessModal";
 
 export default function Login() {
   const { login, register, authError, setAuthError } = useAuth();
   const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -19,26 +21,46 @@ export default function Login() {
     setAuthError("");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isRegister) {
       if (!form.name || !form.email || !form.password) {
         setAuthError("請填寫所有欄位");
         return;
       }
-      const success = register(form.name, form.email, form.password);
-      if (success) navigate("/");
+      const success = await register(form.name, form.email, form.password);
+      if (success) {
+        setSuccessMessage("註冊成功！");
+      }
     } else {
       if (!form.email || !form.password) {
         setAuthError("請填寫所有欄位");
         return;
       }
-      const success = login(form.email, form.password);
-      if (success) navigate("/");
+      const success = await login(form.email, form.password);
+      if (success) {
+        setSuccessMessage("登入成功！");
+      }
+    }
+  };
+
+  const handleModalDone = () => {
+    setSuccessMessage("");
+    if (isRegister) {
+      // 註冊成功 → 切換到登入頁
+      setIsRegister(false);
+      setForm({ name: "", email: "", password: "" });
+    } else {
+      // 登入成功 → 跳轉首頁
+      navigate("/");
     }
   };
 
   return (
     <div className="login-page">
+      {successMessage && (
+        <SuccessModal message={successMessage} onDone={handleModalDone} />
+      )}
+
       <div className="login-card">
         <h1 className="login-title">{isRegister ? "註冊帳號" : "登入"}</h1>
 

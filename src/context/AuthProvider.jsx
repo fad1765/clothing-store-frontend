@@ -1,46 +1,70 @@
 import { useState } from "react";
 import { AuthContext } from "./AuthContext";
-
-// 假資料使用者
-const FAKE_USERS = [
-  { id: 1, name: "王小明", email: "ming@test.com", password: "123456" },
-  { id: 2, name: "李小花", email: "hua@test.com", password: "123456" },
-];
+import { useCart } from "./useCart";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [authError, setAuthError] = useState("");
+  const { mergeLocalCartToDB, clearCart } = useCart();
 
-  const login = (email, password) => {
-    const found = FAKE_USERS.find(
-      (u) => u.email === email && u.password === password,
-    );
-    if (found) {
-      setUser({ id: found.id, name: found.name, email: found.email });
-      setAuthError("");
-      return true;
-    } else {
-      setAuthError("帳號或密碼錯誤");
+  const login = async (email, password) => {
+    try {
+      const res = await fetch("http://localhost:8000/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setUser({
+          id: data.id,
+          name: data.username,
+          email: data.email,
+          role: data.role,
+        });
+        setAuthError("");
+        // 登入後把 localStorage 購物車合併到資料庫
+        await mergeLocalCartToDB(data.id);
+        return true;
+      } else {
+        setAuthError(data.detail || "帳號或密碼錯誤");
+        return false;
+      }
+    } catch {
+      setAuthError("伺服器連線失敗");
       return false;
     }
   };
 
-  const register = (name, email, password) => {
-    const exists = FAKE_USERS.find((u) => u.email === email);
-    if (exists) {
-      setAuthError("此信箱已被註冊");
+  const register = async (name, email, password) => {
+    try {
+      const res = await fetch("http://localhost:8000/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setAuthError("");
+        return true;
+      } else {
+        setAuthError(data.detail || "註冊失敗");
+        return false;
+      }
+    } catch {
+      setAuthError("伺服器連線失敗");
       return false;
     }
-    const newUser = { id: FAKE_USERS.length + 1, name, email, password };
-    FAKE_USERS.push(newUser);
-    setUser({ id: newUser.id, name: newUser.name, email: newUser.email });
-    setAuthError("");
-    return true;
   };
 
   const logout = () => {
     setUser(null);
     setAuthError("");
+    clearCart(); // 登出時清空購物車狀態
   };
 
   return (

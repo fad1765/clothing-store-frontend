@@ -12,8 +12,8 @@ import { AuthProvider } from "./context/AuthProvider";
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
+      <CartProvider>
+        <AuthProvider>
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -24,8 +24,8 @@ function App() {
               <Route path="/login" element={<Login />} />
             </Routes>
           </Layout>
-        </CartProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </CartProvider>
     </BrowserRouter>
   );
 }
