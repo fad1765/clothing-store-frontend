@@ -1,8 +1,8 @@
 .slider {
   position: relative;
   width: 100%;
-  max-width: 1500px;
-  height: 500px;
+  max-width: 2000px;
+  height: 600px;
   margin: 0 auto;
   overflow: hidden;
 }
@@ -13,7 +13,7 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 0.8s ease-in-out;
+  transition: opacity 1.5s ease-in-out;
 }
 
 .slide.active {

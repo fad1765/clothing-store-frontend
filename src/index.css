@@ -4,9 +4,18 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 body {
   font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
-  background-color: #f2f0ed;
+  background-color: #e0e0e0;
   color: #111;
   -webkit-font-smoothing: antialiased;
 }
@@ -24,4 +33,13 @@ body {
 
 .main-content {
   animation: fadeUp 0.3s ease;
+}
+
+main,
+.main-content,
+.app,
+.layout {
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }

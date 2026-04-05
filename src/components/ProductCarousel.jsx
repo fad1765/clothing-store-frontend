@@ -40,7 +40,7 @@ export default function ProductCarousel({ products, onProductClick }) {
             <ProductCard
               key={product.id}
               product={product}
-              onClick={onProductClick} 
+              onClick={onProductClick}
             />
           ))}
         </div>

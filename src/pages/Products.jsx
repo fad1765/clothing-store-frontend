@@ -1,13 +1,18 @@
 import { useState, useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductModal";
 import "../styles/category.css";
 
 const PRODUCTS_PER_PAGE = 8;
 
-export default function Sock() {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+export default function Products() {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const keyword = params.get("keyword") || "";
+
   const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sortType, setSortType] = useState("latest");
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,8 +21,7 @@ export default function Sock() {
     fetch("http://localhost:8000/products")
       .then((res) => res.json())
       .then((data) => {
-        const sockProducts = data.filter((p) => p.category === "sock");
-        setProducts(sockProducts);
+        setProducts(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -26,8 +30,31 @@ export default function Sock() {
       });
   }, []);
 
+  const filteredProducts = useMemo(() => {
+    const lowerKeyword = keyword.trim().toLowerCase();
+
+    if (!lowerKeyword) return products;
+
+    return products.filter((p) => {
+      const categoryTextMap = {
+        clothing: "衣服 上衣 服飾 clothing",
+        pant: "褲子 長褲 短褲 牛仔褲 褲 pant",
+        sock: "襪子 襪 短襪 長襪 sock",
+      };
+
+      const searchText = `
+        ${p.name || ""}
+        ${p.description || ""}
+        ${p.category || ""}
+        ${categoryTextMap[p.category] || ""}
+      `.toLowerCase();
+
+      return searchText.includes(lowerKeyword);
+    });
+  }, [products, keyword]);
+
   const sortedProducts = useMemo(() => {
-    const copiedProducts = [...products];
+    const copiedProducts = [...filteredProducts];
 
     switch (sortType) {
       case "price-asc":
@@ -47,32 +74,36 @@ export default function Sock() {
           return dateB - dateA;
         });
     }
-  }, [products, sortType]);
+  }, [filteredProducts, sortType]);
 
   const totalPages = Math.max(
     1,
     Math.ceil(sortedProducts.length / PRODUCTS_PER_PAGE),
   );
 
+  const safePage = currentPage > totalPages ? 1 : currentPage;
+
   const currentProducts = useMemo(() => {
-    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    const startIndex = (safePage - 1) * PRODUCTS_PER_PAGE;
     const endIndex = startIndex + PRODUCTS_PER_PAGE;
     return sortedProducts.slice(startIndex, endIndex);
-  }, [sortedProducts, currentPage]);
+  }, [sortedProducts, safePage]);
 
   if (loading) return <p>載入中...</p>;
 
   return (
     <div className="category-page">
-      <h1 className="category-title">襪子</h1>
+      <h1 className="category-title">搜尋結果</h1>
 
       <div className="category-topbar">
-        <p className="product-count">共 {sortedProducts.length} 件商品</p>
+        <p className="product-count">
+          關鍵字：{keyword || "全部"}，共 {sortedProducts.length} 件商品
+        </p>
 
         <div className="sort-box">
-          <label htmlFor="sock-sort">排序方式：</label>
+          <label htmlFor="products-sort">排序方式：</label>
           <select
-            id="sock-sort"
+            id="products-sort"
             value={sortType}
             onChange={(e) => {
               setSortType(e.target.value);
@@ -97,20 +128,20 @@ export default function Sock() {
             />
           ))
         ) : (
-          <p className="empty-text">目前沒有商品</p>
+          <p className="empty-text">找不到符合條件的商品</p>
         )}
       </div>
 
       <div className="pagination-wrapper">
         <p className="pagination-info">
-          第 {currentPage} 頁 / 共 {totalPages} 頁
+          第 {safePage} 頁 / 共 {totalPages} 頁
         </p>
 
         <div className="pagination">
           <button
             className="page-btn"
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={safePage === 1}
           >
             上一頁
           </button>
@@ -119,7 +150,7 @@ export default function Sock() {
             (page) => (
               <button
                 key={page}
-                className={`page-number ${currentPage === page ? "active" : ""}`}
+                className={`page-number ${safePage === page ? "active" : ""}`}
                 onClick={() => setCurrentPage(page)}
               >
                 {page}
@@ -129,8 +160,10 @@ export default function Sock() {
 
           <button
             className="page-btn"
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            disabled={currentPage === totalPages}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={safePage === totalPages}
           >
             下一頁
           </button>

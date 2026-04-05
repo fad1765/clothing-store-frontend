@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useAuth } from "../context/useAuth";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
+import SuccessModal from "../components/SuccessModal";
 
 export default function Login() {
   const { login, register, authError, setAuthError } = useAuth();
   const navigate = useNavigate();
+
   const [isRegister, setIsRegister] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -19,26 +22,53 @@ export default function Login() {
     setAuthError("");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isRegister) {
       if (!form.name || !form.email || !form.password) {
         setAuthError("請填寫所有欄位");
         return;
       }
-      const success = register(form.name, form.email, form.password);
-      if (success) navigate("/");
+
+      const success = await register(form.name, form.email, form.password);
+
+      if (success) {
+        setSuccessMessage("註冊成功！");
+      }
     } else {
       if (!form.email || !form.password) {
         setAuthError("請填寫所有欄位");
         return;
       }
-      const success = login(form.email, form.password);
-      if (success) navigate("/");
+
+      const loggedInUser = await login(form.email, form.password);
+      console.log("登入回傳資料：", loggedInUser);
+
+      if (loggedInUser) {
+        setSuccessMessage("登入成功！");
+      }
+    }
+  };
+
+  const handleModalDone = () => {
+    const currentMessage = successMessage;
+    setSuccessMessage("");
+
+    if (currentMessage === "註冊成功！") {
+      setIsRegister(false);
+      setForm({ name: "", email: "", password: "" });
+    }
+
+    if (currentMessage === "登入成功！") {
+      navigate("/");
     }
   };
 
   return (
     <div className="login-page">
+      {successMessage && (
+        <SuccessModal message={successMessage} onDone={handleModalDone} />
+      )}
+
       <div className="login-card">
         <h1 className="login-title">{isRegister ? "註冊帳號" : "登入"}</h1>
 
@@ -87,6 +117,7 @@ export default function Login() {
             onClick={() => {
               setIsRegister((prev) => !prev);
               setAuthError("");
+              setSuccessMessage("");
               setForm({ name: "", email: "", password: "" });
             }}
           >
@@ -95,7 +126,9 @@ export default function Login() {
         </p>
 
         {!isRegister && (
-          <p className="login-hint">測試帳號：ming@test.com ／ 密碼：123456</p>
+          <p className="login-hint">
+            測試帳號：admin@admin ／ 密碼：123456
+          </p>
         )}
       </div>
     </div>

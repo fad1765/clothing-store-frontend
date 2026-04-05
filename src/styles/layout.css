@@ -9,6 +9,10 @@
   padding: 20px;
 }
 
+.home-main-content {
+  padding: 0;
+}
+
 .overlay {
   position: fixed;
   inset: 0;

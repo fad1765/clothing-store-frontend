@@ -1,5 +1,5 @@
 .product-card {
-  background: #fff;
+  background: #f3f3f2;
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -8,6 +8,8 @@
     box-shadow 0.22s ease;
   border: 1px solid rgba(0, 0, 0, 0.06);
   flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .product-card:hover {
@@ -57,6 +59,7 @@
   text-transform: uppercase;
   padding: 8px 20px;
   border-radius: 2px;
+  white-space: nowrap;
 }
 
 .product-info {
@@ -81,4 +84,110 @@
   font-size: 14px;
   margin: 0;
   letter-spacing: 0.5px;
+}
+
+/* 平板 */
+@media (max-width: 1024px) {
+  .product-card {
+    border-radius: 8px;
+  }
+
+  .product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-overlay {
+    padding-bottom: 12px;
+  }
+
+  .view-detail {
+    font-size: 13px;
+    letter-spacing: 0.6px;
+    padding: 7px 16px;
+  }
+
+  .product-info {
+    padding: 11px 12px 12px;
+  }
+
+  .product-name {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .product-price {
+    font-size: 13px;
+  }
+}
+
+/* 大手機 / 小平板 */
+@media (max-width: 768px) {
+  .product-card {
+    border-radius: 8px;
+  }
+
+  .product-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .product-card:active {
+    transform: scale(0.99);
+  }
+
+  .product-card:hover .product-image-wrapper img {
+    transform: none;
+  }
+
+  .product-overlay {
+    display: none;
+  }
+
+  .product-info {
+    padding: 10px 10px 11px;
+  }
+
+  .product-name {
+    font-size: 12px;
+    margin-bottom: 4px;
+    letter-spacing: 0.2px;
+  }
+
+  .product-price {
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+
+  .product-image-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0));
+    pointer-events: none;
+  }
+}
+
+/* 小手機 */
+@media (max-width: 480px) {
+  .product-card {
+    border-radius: 7px;
+  }
+
+  .product-image-wrapper img {
+    aspect-ratio: 3 / 4;
+  }
+
+  .product-info {
+    padding: 9px 9px 10px;
+  }
+
+  .product-name {
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
+
+  .product-price {
+    font-size: 12px;
+  }
 }

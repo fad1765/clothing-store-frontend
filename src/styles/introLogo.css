@@ -1,0 +1,136 @@
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  background: #050505;
+}
+
+.intro-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 520px;
+  height: 520px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: rgba(214, 193, 160, 0.1);
+  filter: blur(48px);
+}
+
+.intro-shine {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 24%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  filter: blur(16px);
+}
+
+.intro-content-wrap {
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+.intro-content {
+  display: flex;
+  max-width: 780px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.intro-logo-box {
+  position: relative;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 220px;
+  overflow: hidden;
+}
+
+.intro-logo-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.intro-welcome {
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.55em;
+  color: rgba(214, 193, 160, 0.75);
+}
+
+.intro-title {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 0.32em;
+  color: #f5efe6;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  text-transform: uppercase;
+}
+
+.intro-line {
+  margin-top: 24px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(214, 193, 160, 0.7),
+    transparent
+  );
+}
+
+.intro-subtitle {
+  margin-top: 20px;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (min-width: 640px) {
+  .intro-logo-box {
+    width: 380px;
+    height: 250px;
+  }
+
+  .intro-title {
+    font-size: 34px;
+  }
+
+  .intro-welcome {
+    font-size: 12px;
+  }
+
+  .intro-subtitle {
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 768px) {
+  .intro-logo-box {
+    width: 440px;
+    height: 280px;
+  }
+
+  .intro-title {
+    font-size: 42px;
+  }
+}

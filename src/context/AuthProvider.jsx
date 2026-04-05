@@ -1,51 +1,114 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 
-// 假資料使用者
-const FAKE_USERS = [
-  { id: 1, name: "王小明", email: "ming@test.com", password: "123456" },
-  { id: 2, name: "李小花", email: "hua@test.com", password: "123456" },
-];
+const API_BASE_URL = "http://localhost:8000";
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (err) {
+      console.error("讀取 user 失敗", err);
+      return null;
+    }
+  });
+
   const [authError, setAuthError] = useState("");
 
-  const login = (email, password) => {
-    const found = FAKE_USERS.find(
-      (u) => u.email === email && u.password === password,
-    );
-    if (found) {
-      setUser({ id: found.id, name: found.name, email: found.email });
-      setAuthError("");
-      return true;
-    } else {
-      setAuthError("帳號或密碼錯誤");
-      return false;
+  useEffect(() => {
+    try {
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("user");
+      }
+    } catch (err) {
+      console.error("同步 user 到 localStorage 失敗", err);
+    }
+  }, [user]);
+
+  const login = async (email, password) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        const loggedInUser = {
+          id: data.id,
+          name: data.username,
+          email: data.email,
+          role: data.role,
+        };
+
+        setUser(loggedInUser);
+        setAuthError("");
+
+        // 購物車合併不在這裡做，改由 CartProvider 偵測 user 後自動處理
+        return loggedInUser;
+      } else {
+        setAuthError(data.detail || "帳號或密碼錯誤");
+        return null;
+      }
+    } catch (err) {
+      console.error("登入失敗", err);
+      setAuthError("伺服器連線失敗");
+      return null;
     }
   };
 
-  const register = (name, email, password) => {
-    const exists = FAKE_USERS.find((u) => u.email === email);
-    if (exists) {
-      setAuthError("此信箱已被註冊");
+  const register = async (name, email, password) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setAuthError("");
+        return true;
+      } else {
+        setAuthError(data.detail || "註冊失敗");
+        return false;
+      }
+    } catch (err) {
+      console.error("註冊失敗", err);
+      setAuthError("伺服器連線失敗");
       return false;
     }
-    const newUser = { id: FAKE_USERS.length + 1, name, email, password };
-    FAKE_USERS.push(newUser);
-    setUser({ id: newUser.id, name: newUser.name, email: newUser.email });
-    setAuthError("");
-    return true;
   };
 
   const logout = () => {
     setUser(null);
     setAuthError("");
+
+    // 會員登出後，CartProvider 會因為 user 變成 null
+    // 自動把畫面購物車切回 guest_cart（若沒有則為空）
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, authError, setAuthError, login, register, logout }}
+      value={{
+        user,
+        setUser,
+        authError,
+        setAuthError,
+        login,
+        register,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>
