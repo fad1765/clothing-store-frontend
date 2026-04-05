@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
-import "../styles/IntroLogo.css";
+import "../styles/introLogo.css";
 
 const logoImage = "/images/logo.jpg";
 
