@@ -1,22 +1,28 @@
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 16px;
   background: #111;
   padding: 0 24px 0 48px;
-  height: 60px;
+  min-height: 60px;
   position: sticky;
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+}
+
+.header-left {
+  flex-shrink: 0;
 }
 
 .header-left h1 {
   font-size: 16px;
   color: #fff;
   font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .menu-icon {
@@ -25,27 +31,45 @@
   cursor: pointer;
   color: rgba(255, 255, 255, 0.7);
   transition: color 0.2s;
+  flex-shrink: 0;
 }
 
 .menu-icon:hover {
   color: #fff;
 }
 
-.header-center {
+.header-spacer {
+  flex: 1;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
   margin-left: auto;
-  margin-right: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  width: 220px;
+  flex-shrink: 0;
 }
 
 .search-input {
-  padding: 7px 14px;
-  border-radius: 4px;
+  width: 100%;
+  height: 38px;
+  padding: 0 40px 0 14px;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(255, 255, 255, 0.07);
   color: #fff;
   font-size: 13px;
-  width: 200px;
   outline: none;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .search-input::placeholder {
@@ -53,25 +77,52 @@
 }
 
 .search-input:focus {
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.32);
   background: rgba(255, 255, 255, 0.1);
 }
 
-.search-icons {
-  color: rgba(255, 255, 255, 0.5);
-  margin-right: 8px;
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.55);
   cursor: pointer;
+  font-size: 15px;
+  transition: color 0.2s ease;
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.search-icon:hover {
+  color: #fff;
 }
 
 .header-username {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f3f3f2;
+}
+
+.user-icon {
+  font-size: 18px;
+  color: #f3f3f2;
+  transform: translateY(1px);
+}
+
+.username-text {
+  letter-spacing: 0.5px;
+}
+
+.admin-badge {
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  background: #111;
+  color: #fff;
+  border-radius: 6px;
 }
 
 .login-link-btn,
@@ -85,6 +136,7 @@
   font-size: 13px;
   transition: all 0.2s;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .login-link-btn:hover,
@@ -94,7 +146,8 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-.cart-btn {
+.cart-btn,
+.admin-btn {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -109,9 +162,11 @@
   transition: all 0.2s;
   position: relative;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
-.cart-btn:hover {
+.cart-btn:hover,
+.admin-btn:hover {
   background: #f0f0f0;
 }
 
@@ -126,4 +181,209 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* 平板 */
+@media (max-width: 1024px) {
+  .header {
+    padding: 0 18px 0 42px;
+    gap: 12px;
+  }
+
+  .search-box {
+    width: 200px;
+  }
+
+  .header-username {
+    display: none;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+}
+
+/* 手機 / 小平板 */
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 12px 12px;
+    min-height: auto;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .menu-icon {
+    position: absolute;
+    left: 12px;
+    top: 13px;
+    transform: none;
+    font-size: 22px;
+  }
+
+  .header-left {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 30px;
+    min-height: 28px;
+  }
+
+  .header-left h1 {
+    font-size: 18px;
+    letter-spacing: 0.8px;
+    text-align: center;
+  }
+
+  .header-spacer {
+    display: none;
+  }
+
+  .header-right {
+    width: 100%;
+    margin-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .header-username {
+    order: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .logout-btn,
+  .login-link-btn {
+    order: 2;
+    flex: 0 0 auto;
+  }
+
+  .cart-btn {
+    order: 3;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .admin-btn {
+    order: 2;
+    flex: 0 0 auto;
+  }
+
+  .search-box {
+    order: 4;
+    width: 100%;
+    flex: 0 0 100%;
+    min-width: 0;
+    margin-top: 2px;
+  }
+
+  .search-input {
+    height: 40px;
+    font-size: 13px;
+    border-radius: 12px;
+    padding: 0 40px 0 14px;
+  }
+
+  .search-icon {
+    right: 12px;
+    font-size: 14px;
+  }
+
+  .username-text {
+    max-width: 86px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .login-link-btn,
+  .logout-btn,
+  .cart-btn,
+  .admin-btn {
+    font-size: 12px;
+    padding: 7px 12px;
+    min-height: 36px;
+    border-radius: 10px;
+  }
+
+  .cart-count {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    font-size: 9px;
+  }
+}
+
+/* 小手機 */
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 10px 12px;
+    gap: 8px;
+  }
+
+  .menu-icon {
+    left: 10px;
+    top: 12px;
+  }
+
+  .header-left {
+    padding: 0 26px;
+  }
+
+  .header-left h1 {
+    font-size: 17px;
+    letter-spacing: 0.6px;
+  }
+
+  .search-input {
+    height: 38px;
+    padding: 0 38px 0 12px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+
+  .search-icon {
+    right: 10px;
+    font-size: 13px;
+  }
+
+  .header-username {
+    font-size: 12px;
+    gap: 5px;
+  }
+
+  .user-icon {
+    font-size: 15px;
+  }
+
+  .username-text {
+    max-width: 68px;
+  }
+
+  .login-link-btn,
+  .logout-btn,
+  .cart-btn,
+  .admin-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+    min-height: 34px;
+    border-radius: 9px;
+  }
+
+  .cart-count {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+    font-size: 9px;
+  }
 }

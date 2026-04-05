@@ -7,6 +7,7 @@ import SuccessModal from "../components/SuccessModal";
 export default function Login() {
   const { login, register, authError, setAuthError } = useAuth();
   const navigate = useNavigate();
+
   const [isRegister, setIsRegister] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -27,7 +28,9 @@ export default function Login() {
         setAuthError("請填寫所有欄位");
         return;
       }
+
       const success = await register(form.name, form.email, form.password);
+
       if (success) {
         setSuccessMessage("註冊成功！");
       }
@@ -36,21 +39,26 @@ export default function Login() {
         setAuthError("請填寫所有欄位");
         return;
       }
-      const success = await login(form.email, form.password);
-      if (success) {
+
+      const loggedInUser = await login(form.email, form.password);
+      console.log("登入回傳資料：", loggedInUser);
+
+      if (loggedInUser) {
         setSuccessMessage("登入成功！");
       }
     }
   };
 
   const handleModalDone = () => {
+    const currentMessage = successMessage;
     setSuccessMessage("");
-    if (isRegister) {
-      // 註冊成功 → 切換到登入頁
+
+    if (currentMessage === "註冊成功！") {
       setIsRegister(false);
       setForm({ name: "", email: "", password: "" });
-    } else {
-      // 登入成功 → 跳轉首頁
+    }
+
+    if (currentMessage === "登入成功！") {
       navigate("/");
     }
   };
@@ -109,6 +117,7 @@ export default function Login() {
             onClick={() => {
               setIsRegister((prev) => !prev);
               setAuthError("");
+              setSuccessMessage("");
               setForm({ name: "", email: "", password: "" });
             }}
           >
@@ -117,7 +126,9 @@ export default function Login() {
         </p>
 
         {!isRegister && (
-          <p className="login-hint">測試帳號：ming@test.com ／ 密碼：123456</p>
+          <p className="login-hint">
+            測試帳號：admin@admin ／ 密碼：123456
+          </p>
         )}
       </div>
     </div>

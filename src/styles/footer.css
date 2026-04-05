@@ -10,15 +10,22 @@
   justify-content: space-around;
   align-items: center;
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
+  padding: 0 24px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.footer-container > div {
+  min-width: 180px;
 }
 
 .footer-container p {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
   margin: 4px 0;
+  line-height: 1.6;
 }
 
 .footer-heading {
@@ -36,25 +43,24 @@
   gap: 16px;
 }
 
-.ig-icon {
-  color: #d62976;
+.ig-icon,
+.fb-icon,
+.line-icon {
   font-size: 20px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease;
+}
+
+.ig-icon {
+  color: #d62976;
 }
 
 .fb-icon {
   color: #0866ff;
-  font-size: 20px;
-  cursor: pointer;
-  transition: transform 0.2s;
 }
 
 .line-icon {
   color: #00b900;
-  font-size: 20px;
-  cursor: pointer;
-  transition: transform 0.2s;
 }
 
 .ig-icon:hover,
@@ -69,5 +75,130 @@
   font-size: 12px;
   color: #666;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 12px;
+  padding: 12px 16px 0;
+}
+
+/* 平板 */
+@media (max-width: 1024px) {
+  .footer {
+    padding: 22px 0 14px;
+  }
+
+  .footer-container {
+    justify-content: space-between;
+    padding: 0 20px;
+    gap: 18px;
+  }
+
+  .footer-container > div {
+    min-width: 160px;
+  }
+
+  .footer-heading {
+    font-size: 18px;
+    letter-spacing: 1.2px;
+  }
+
+  .footer-container p {
+    font-size: 12px;
+  }
+
+  .social-row {
+    gap: 14px;
+  }
+
+  .ig-icon,
+  .fb-icon,
+  .line-icon {
+    font-size: 19px;
+  }
+}
+
+/* 手機 / 小平板 */
+@media (max-width: 768px) {
+  .footer {
+    margin-top: 16px;
+    padding: 24px 0 14px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 22px;
+    padding: 0 16px;
+  }
+
+  .footer-container > div {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .footer-heading {
+    font-size: 17px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .footer-container p {
+    font-size: 12px;
+    margin: 3px 0;
+  }
+
+  .social-row {
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .ig-icon,
+  .fb-icon,
+  .line-icon {
+    font-size: 20px;
+  }
+
+  .footer-bottom {
+    margin-top: 18px;
+    font-size: 11px;
+    padding-top: 12px;
+  }
+}
+
+/* 小手機 */
+@media (max-width: 480px) {
+  .footer {
+    margin-top: 14px;
+    padding: 20px 0 12px;
+  }
+
+  .footer-container {
+    gap: 18px;
+    padding: 0 12px;
+  }
+
+  .footer-heading {
+    font-size: 16px;
+    letter-spacing: 0.8px;
+  }
+
+  .footer-container p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .social-row {
+    gap: 16px;
+  }
+
+  .ig-icon,
+  .fb-icon,
+  .line-icon {
+    font-size: 18px;
+  }
+
+  .footer-bottom {
+    font-size: 10px;
+    margin-top: 16px;
+    padding: 10px 12px 0;
+  }
 }
