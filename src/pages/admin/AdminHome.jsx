@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "../../styles/adminHome.css";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const EMPTY_ARRAY = [];
 
 export default function AdminHome() {
@@ -18,7 +18,7 @@ export default function AdminHome() {
       setLoading(true);
       setError("");
 
-      const res = await fetch(`${API_BASE}/admin/dashboard`);
+      const res = await fetch(`${API_BASE_URL}/admin/dashboard`);
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {

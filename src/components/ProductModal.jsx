@@ -3,6 +3,7 @@ import { useCart } from "../context/useCart";
 import { useAuth } from "../context/useAuth";
 import "../styles/productmodal.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SIZES = ["S", "M", "L", "XL"];
 const SIZE_CATEGORIES = ["clothing", "pant"];
 
@@ -119,7 +120,7 @@ export default function ProductModal({ product, onClose }) {
       setLoadingComments(true);
 
       const res = await fetch(
-        `http://localhost:8000/products/${product.id}/comments`,
+        `${API_BASE_URL}/products/${product.id}/comments`,
       );
 
       if (!res.ok) {
@@ -147,7 +148,7 @@ export default function ProductModal({ product, onClose }) {
       setFavoriteLoading(true);
 
       const res = await fetch(
-        `http://localhost:8000/wishlist/check?user_id=${user.id}&product_id=${product.id}`,
+        `${API_BASE_URL}/wishlist/check?user_id=${user.id}&product_id=${product.id}`,
       );
 
       if (!res.ok) {
@@ -248,7 +249,7 @@ export default function ProductModal({ product, onClose }) {
 
       if (isFavorite) {
         const res = await fetch(
-          `http://localhost:8000/wishlist?user_id=${user.id}&product_id=${product.id}`,
+          `${API_BASE_URL}/wishlist?user_id=${user.id}&product_id=${product.id}`,
           {
             method: "DELETE",
           },
@@ -264,7 +265,7 @@ export default function ProductModal({ product, onClose }) {
         setIsFavorite(false);
         showToast("已取消收藏", "success");
       } else {
-        const res = await fetch(`http://localhost:8000/wishlist`, {
+        const res = await fetch(`${API_BASE_URL}/wishlist`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -308,7 +309,7 @@ export default function ProductModal({ product, onClose }) {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/products/${product.id}/comments`,
+        `${API_BASE_URL}/products/${product.id}/comments`,
         {
           method: "POST",
           headers: {
@@ -347,7 +348,7 @@ export default function ProductModal({ product, onClose }) {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/comments/${commentId}/like`,
+        `${API_BASE_URL}/comments/${commentId}/like`,
         {
           method: "POST",
           headers: {
@@ -394,7 +395,7 @@ export default function ProductModal({ product, onClose }) {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/comments/${confirmDeleteId}?user_id=${user.id}`,
+        `${API_BASE_URL}/comments/${confirmDeleteId}?user_id=${user.id}`,
         {
           method: "DELETE",
         },

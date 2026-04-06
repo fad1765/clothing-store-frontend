@@ -9,7 +9,7 @@ import "../styles/home.css";
 import ProductCarousel from "../components/ProductCarousel";
 import ProductModal from "../components/ProductModal";
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Home() {
   const navigate = useNavigate();
@@ -95,6 +95,7 @@ export default function Home() {
     if (category === "pant") navigate("/pants");
     if (category === "sock") navigate("/socks");
   };
+
   if (loading) return <p className="home-loading">載入中...</p>;
 
   return (

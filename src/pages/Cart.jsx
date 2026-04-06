@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import "../styles/cart.css";
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const CART_ITEMS_PER_PAGE = 3;
 const COUPONS_PER_PAGE = 3;
 
@@ -263,7 +263,7 @@ export default function Cart() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/coupons/list", {
+      const res = await fetch(`${API_BASE_URL}/coupons/list`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -307,7 +307,7 @@ export default function Cart() {
     setCouponMessage("");
 
     try {
-      const res = await fetch("http://localhost:8000/coupons/validate", {
+      const res = await fetch(`${API_BASE_URL}/coupons/validate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -355,7 +355,7 @@ export default function Cart() {
     const items = normalizedCartItems;
 
     try {
-      const res = await fetch("http://localhost:8000/orders", {
+      const res = await fetch(`${API_BASE_URL}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

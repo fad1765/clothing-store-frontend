@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import "../../styles/adminOrders.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const statusMap = {
   all: "全部狀態",
   pending: "待出貨",
@@ -113,7 +115,7 @@ export default function AdminOrders() {
       try {
         if (showLoading) setLoading(true);
 
-        const res = await fetch("http://localhost:8000/orders");
+        const res = await fetch(`${API_BASE_URL}/orders`);
         if (!res.ok) throw new Error("載入訂單失敗");
 
         const data = await res.json();
@@ -173,7 +175,7 @@ export default function AdminOrders() {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       const res = await fetch(
-        `http://localhost:8000/orders/${orderId}/status`,
+        `${API_BASE_URL}/orders/${orderId}/status`,
         {
           method: "PUT",
           headers: {
@@ -220,7 +222,7 @@ export default function AdminOrders() {
   const openOrderDetail = async (order) => {
     try {
       const res = await fetch(
-        `http://localhost:8000/orders/detail/${order.id}`,
+        `${API_BASE_URL}/orders/detail/${order.id}`,
       );
 
       if (!res.ok) {

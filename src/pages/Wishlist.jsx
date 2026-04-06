@@ -3,6 +3,8 @@ import { useAuth } from "../context/useAuth";
 import ProductModal from "../components/ProductModal";
 import "../styles/wishlist.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function Wishlist() {
   const { user } = useAuth();
 
@@ -34,7 +36,7 @@ export default function Wishlist() {
     try {
       setLoading(true);
 
-      const res = await fetch(`http://localhost:8000/wishlist/${user.id}`);
+      const res = await fetch(`${API_BASE_URL}/wishlist/${user.id}`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -62,7 +64,7 @@ export default function Wishlist() {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/wishlist?user_id=${user.id}&product_id=${productId}`,
+        `${API_BASE_URL}/wishlist?user_id=${user.id}&product_id=${productId}`,
         {
           method: "DELETE",
         },

@@ -3,7 +3,7 @@ import { useAuth } from "../context/useAuth";
 import { useNavigate } from "react-router-dom";
 import "../styles/cartdrawer.css";
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function getImageUrl(path) {
   if (!path) return "";

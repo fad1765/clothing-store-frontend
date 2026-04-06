@@ -4,6 +4,8 @@ import { FaCheck } from "react-icons/fa6";
 import { ImCross } from "react-icons/im";
 import "../../styles/admin.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -103,7 +105,7 @@ export default function AdminProducts() {
     try {
       if (showLoading) setLoading(true);
 
-      const res = await fetch("http://localhost:8000/products");
+      const res = await fetch(`${API_BASE_URL}/products`);
       if (!res.ok) throw new Error("載入商品失敗");
 
       const data = await res.json();
@@ -169,7 +171,7 @@ export default function AdminProducts() {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/products/${deleteTarget.id}`,
+        `${API_BASE_URL}/products/${deleteTarget.id}`,
         {
           method: "DELETE",
         },
@@ -288,7 +290,7 @@ export default function AdminProducts() {
 
       if (editProduct) {
         const res = await fetch(
-          `http://localhost:8000/products/${editProduct.id}`,
+          `${API_BASE_URL}/products/${editProduct.id}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -339,7 +341,7 @@ export default function AdminProducts() {
 
         imageFiles.forEach((file) => formData.append("images", file));
 
-        const res = await fetch("http://localhost:8000/products", {
+        const res = await fetch(`${API_BASE_URL}/products`, {
           method: "POST",
           body: formData,
         });

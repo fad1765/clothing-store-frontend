@@ -4,6 +4,7 @@ import ProductModal from "../components/ProductModal";
 import "../styles/category.css";
 
 const PRODUCTS_PER_PAGE = 8;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Clothing() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -13,7 +14,7 @@ export default function Clothing() {
   const [currentPage, setCurrentPage] = useState(1);
   console.log(products);
   useEffect(() => {
-    fetch("http://localhost:8000/products")
+    fetch(`${API_BASE_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
         const clothingProducts = data.filter((p) => p.category === "clothing");

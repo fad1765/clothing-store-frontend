@@ -3,7 +3,7 @@ import { CartContext } from "./CartContext";
 import { useAuth } from "./useAuth";
 
 const CART_STORAGE_KEY = "guest_cart";
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function getProductId(product) {
   return product?.product_id ?? product?.id ?? null;
