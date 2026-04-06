@@ -44,9 +44,17 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <Layout>
-                    <Home />
-                  </Layout>
+                  <div
+                    style={{
+                      minHeight: "100vh",
+                      background: "yellow",
+                      color: "#000",
+                      padding: "40px 20px",
+                      fontSize: "24px",
+                    }}
+                  >
+                    手機測試頁面
+                  </div>
                 }
               />
               <Route
@@ -170,4 +178,5 @@ function App() {
     </BrowserRouter>
   );
 }
+
 export default App;
