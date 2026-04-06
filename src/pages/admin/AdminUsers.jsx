@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "../../styles/adminUsers.css";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const defaultForm = {
   username: "",
@@ -49,7 +49,7 @@ export default function AdminUsers() {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_BASE}/admin/users`);
+      const res = await fetch(`${API_BASE_URL}/admin/users`);
 
       if (!res.ok) {
         throw new Error("載入使用者失敗");
@@ -110,7 +110,7 @@ export default function AdminUsers() {
     if (!editUser) return;
 
     try {
-      const res = await fetch(`${API_BASE}/admin/users/${editUser.id}`, {
+      const res = await fetch(`${API_BASE_URL}/admin/users/${editUser.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -146,7 +146,7 @@ export default function AdminUsers() {
     if (!deleteTarget) return;
 
     try {
-      const res = await fetch(`${API_BASE}/admin/users/${deleteTarget.id}`, {
+      const res = await fetch(`${API_BASE_URL}/admin/users/${deleteTarget.id}`, {
         method: "DELETE",
       });
 
@@ -173,7 +173,7 @@ export default function AdminUsers() {
       setOrdersLoading(true);
       setUserOrders([]);
 
-      const res = await fetch(`${API_BASE}/admin/users/${user.id}/orders`);
+      const res = await fetch(`${API_BASE_URL}/admin/users/${user.id}/orders`);
       const data = await res.json().catch(() => []);
 
       if (!res.ok) {

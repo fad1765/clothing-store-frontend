@@ -4,6 +4,8 @@ import ProductCard from "../components/ProductCard";
 import ProductModal from "../components/ProductModal";
 import "../styles/category.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const PRODUCTS_PER_PAGE = 8;
 
 export default function Products() {
@@ -18,7 +20,7 @@ export default function Products() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetch("http://localhost:8000/products")
+    fetch(`${API_BASE_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);

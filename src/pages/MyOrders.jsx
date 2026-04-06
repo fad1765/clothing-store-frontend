@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/useAuth";
 import "../styles/myorders.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const STATUS_TEXT = {
   pending: "處理中",
   shipped: "已出貨",
@@ -38,7 +40,7 @@ function OrderDetailInline({ orderId, status }) {
   useEffect(() => {
     let isMounted = true;
 
-    fetch(`http://localhost:8000/orders/detail/${orderId}`)
+    fetch(`${API_BASE_URL}/orders/detail/${orderId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("取得訂單明細失敗");
@@ -237,7 +239,7 @@ export default function MyOrders() {
 
     let isMounted = true;
 
-    fetch(`http://localhost:8000/orders/user/${user.id}`)
+    fetch(`${API_BASE_URL}/orders/user/${user.id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("取得訂單失敗");

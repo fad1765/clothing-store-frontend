@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import "../../styles/adminCoupons.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const initialForm = {
   code: "",
   name: "",
@@ -54,7 +56,7 @@ export default function AdminCoupons() {
 
   const fetchCoupons = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:8000/admin/coupons");
+      const res = await fetch(`${API_BASE_URL}/admin/coupons`);
       const data = await res.json();
       setCoupons(Array.isArray(data) ? data : []);
     } catch {
@@ -100,8 +102,8 @@ export default function AdminCoupons() {
 
     try {
       const url = editingId
-        ? `http://localhost:8000/admin/coupons/${editingId}`
-        : "http://localhost:8000/admin/coupons";
+        ? `${API_BASE_URL}/admin/coupons/${editingId}`
+        : `${API_BASE_URL}/admin/coupons`;
 
       const method = editingId ? "PUT" : "POST";
 
@@ -158,7 +160,7 @@ export default function AdminCoupons() {
       async () => {
         try {
           const res = await fetch(
-            `http://localhost:8000/admin/coupons/${coupon.id}/toggle`,
+            `${API_BASE_URL}/admin/coupons/${coupon.id}/toggle`,
             { method: "PATCH" },
           );
 
@@ -189,7 +191,7 @@ export default function AdminCoupons() {
       async () => {
         try {
           const res = await fetch(
-            `http://localhost:8000/admin/coupons/${coupon.id}`,
+            `${API_BASE_URL}/admin/coupons/${coupon.id}`,
             { method: "DELETE" },
           );
 
