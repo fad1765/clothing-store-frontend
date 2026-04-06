@@ -37,14 +37,9 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <IntroLogo show={showIntro} onFinish={handleFinishIntro} />
-
-          <div
-            style={{
-              opacity: showIntro ? 0 : 1,
-              transition: "opacity 0.6s ease",
-            }}
-          >
+          {showIntro ? (
+            <IntroLogo show={showIntro} onFinish={handleFinishIntro} />
+          ) : (
             <Routes>
               <Route
                 path="/"
@@ -118,7 +113,6 @@ function App() {
                   </Layout>
                 }
               />
-
               <Route
                 path="/admin"
                 element={
@@ -170,11 +164,10 @@ function App() {
                 }
               />
             </Routes>
-          </div>
+          )}
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   );
 }
-
 export default App;
