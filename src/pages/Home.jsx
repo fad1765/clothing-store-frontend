@@ -1,20 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import Slider from "../components/Slider";
 import { SlFire } from "react-icons/sl";
 import { MdOutlineTimer } from "react-icons/md";
 import { RiCoupon3Line } from "react-icons/ri";
 import { GiClothes, GiTrousers, GiSocks } from "react-icons/gi";
 import "../styles/home.css";
-import ProductCarousel from "../components/ProductCarousel";
-import ProductModal from "../components/ProductModal";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Home() {
   const navigate = useNavigate();
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [hotProducts, setHotProducts] = useState([]);
   const [limitedProducts, setLimitedProducts] = useState([]);
   const [marqueeCoupons, setMarqueeCoupons] = useState([]);
@@ -65,7 +61,6 @@ export default function Home() {
     if (marqueeCoupons.length > 0) {
       return marqueeCoupons[0]?.marquee_text;
     }
-
     return "優惠活動｜全館滿 NT$ 1000 現折 NT$ 100｜全館適用｜優惠碼 SAVE100";
   }, [marqueeCoupons]);
 
@@ -109,10 +104,6 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="home-slider-wrap">
-        <Slider />
-      </div>
-
       <section className="home-category-section">
         <div className="home-category-frame">
           {categoryItems.map((item, index) => (
@@ -137,26 +128,17 @@ export default function Home() {
         熱門商品
         <SlFire className="fire-icon" />
       </h1>
-      <ProductCarousel
-        products={hotProducts}
-        onProductClick={setSelectedProduct}
-      />
+      <div style={{ padding: "0 24px", color: "#111" }}>
+        熱門商品數量：{hotProducts.length}
+      </div>
 
       <h1 className="home-title-limited">
         限時商品
         <MdOutlineTimer className="time-icon" />
       </h1>
-      <ProductCarousel
-        products={limitedProducts}
-        onProductClick={setSelectedProduct}
-      />
-
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
+      <div style={{ padding: "0 24px 40px", color: "#111" }}>
+        限時商品數量：{limitedProducts.length}
+      </div>
     </div>
   );
 }
