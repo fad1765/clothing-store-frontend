@@ -273,7 +273,7 @@
 }
 
 .custom-modal-actions.single-action {
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 .modal-confirm-btn,
