@@ -6,6 +6,35 @@ import "../../styles/admin.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+function getImageUrl(path) {
+  if (!path) return "";
+
+  const imagePath = String(path).trim();
+
+  if (
+    imagePath.startsWith("http://") ||
+    imagePath.startsWith("https://")
+  ) {
+    return imagePath;
+  }
+
+  // 前端本身的靜態圖片，維持原路徑
+  if (imagePath.startsWith("/images")) {
+    return imagePath;
+  }
+
+  // 後端 uploads 圖片，補上 API 網址
+  if (imagePath.startsWith("/uploads")) {
+    return `${API_BASE_URL}${imagePath}`;
+  }
+
+  if (imagePath.startsWith("uploads/")) {
+    return `${API_BASE_URL}/${imagePath}`;
+  }
+
+  return imagePath;
+}
+
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -109,6 +138,7 @@ export default function AdminProducts() {
       if (!res.ok) throw new Error("載入商品失敗");
 
       const data = await res.json();
+      console.log("products data:", data);
       setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("載入商品失敗:", err);
@@ -149,10 +179,11 @@ export default function AdminProducts() {
     setImageFiles([]);
     setPreviewImage(null);
 
-    setImagePreviews(
-      product.image ? [{ url: product.image, isExisting: true }] : [],
-    );
-
+ setImagePreviews(
+  product.image
+    ? [{ url: getImageUrl(product.image), isExisting: true }]
+    : [],
+);
     setForm({
       name: product.name || "",
       price: product.price ? String(product.price) : "",
@@ -434,7 +465,7 @@ export default function AdminProducts() {
               <tr key={p.id}>
                 <td>
                   <img
-                    src={p.image}
+                    src={getImageUrl(p.image)}
                     alt={p.name}
                     className="admin-table-img"
                     loading="lazy"
@@ -511,7 +542,7 @@ export default function AdminProducts() {
             <div key={p.id} className="admin-product-card">
               <div className="admin-product-card-top">
                 <img
-                  src={p.image}
+                  src={getImageUrl(p.image)}
                   alt={p.name}
                   className="admin-product-card-img"
                   loading="lazy"

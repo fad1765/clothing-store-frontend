@@ -11,6 +11,33 @@ const statusMap = {
   cancelled: "已取消",
 };
 
+function getImageUrl(path) {
+  if (!path) return "https://placehold.co/120x120?text=Product";
+
+  const imagePath = String(path).trim();
+
+  if (
+    imagePath.startsWith("http://") ||
+    imagePath.startsWith("https://")
+  ) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/images")) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/uploads")) {
+    return `${API_BASE_URL}${imagePath}`;
+  }
+
+  if (imagePath.startsWith("uploads/")) {
+    return `${API_BASE_URL}/${imagePath}`;
+  }
+
+  return imagePath;
+}
+
 function getOrderTotal(order) {
   if (typeof order.totalPrice === "number") {
     return order.totalPrice;
@@ -52,7 +79,7 @@ function formatDateTime(dateString) {
 }
 
 function formatOrderNumber(order) {
-  const date = new Date(order.createdAt);
+  const date = new Date(order.createdAt || order.created_at);
   if (Number.isNaN(date.getTime())) {
     return `ORD-${String(order.id).padStart(6, "0")}`;
   }
@@ -199,6 +226,7 @@ export default function AdminOrders() {
                 ...order,
                 status: newStatus,
                 completedAt: completedAtValue,
+                completed_at: completedAtValue,
               }
             : order,
         ),
@@ -209,6 +237,7 @@ export default function AdminOrders() {
           ...prev,
           status: newStatus,
           completedAt: completedAtValue,
+          completed_at: completedAtValue,
         }));
       }
 
@@ -230,7 +259,18 @@ export default function AdminOrders() {
       }
 
       const data = await res.json();
-      setSelectedOrder(data);
+
+      const normalizedData = {
+        ...data,
+        items: Array.isArray(data.items)
+          ? data.items.map((item) => ({
+              ...item,
+              image: getImageUrl(item.image),
+            }))
+          : [],
+      };
+
+      setSelectedOrder(normalizedData);
     } catch (error) {
       console.error("取得訂單詳情失敗:", error);
       showToast("取得訂單詳情失敗", "error");
@@ -341,8 +381,8 @@ export default function AdminOrders() {
                     {statusMap[order.status]}
                   </span>
                 </td>
-                <td>{formatDateTime(order.createdAt)}</td>
-                <td>{formatDateTime(order.completedAt)}</td>
+                <td>{formatDateTime(order.createdAt || order.created_at)}</td>
+                <td>{formatDateTime(order.completedAt || order.completed_at)}</td>
                 <td>
                   <div className="admin-order-actions">
                     <button
@@ -418,12 +458,12 @@ export default function AdminOrders() {
 
                 <div className="mobile-order-info-item">
                   <span className="mobile-order-info-label">建立時間</span>
-                  <strong>{formatDateTime(order.createdAt)}</strong>
+                  <strong>{formatDateTime(order.createdAt || order.created_at)}</strong>
                 </div>
 
                 <div className="mobile-order-info-item">
                   <span className="mobile-order-info-label">完成時間</span>
-                  <strong>{formatDateTime(order.completedAt)}</strong>
+                  <strong>{formatDateTime(order.completedAt || order.completed_at)}</strong>
                 </div>
               </div>
 
@@ -509,11 +549,11 @@ export default function AdminOrders() {
                 </p>
                 <p>
                   <strong>建立時間：</strong>
-                  {formatDateTime(selectedOrder.createdAt)}
+                  {formatDateTime(selectedOrder.createdAt || selectedOrder.created_at)}
                 </p>
                 <p>
                   <strong>完成時間：</strong>
-                  {formatDateTime(selectedOrder.completedAt)}
+                  {formatDateTime(selectedOrder.completedAt || selectedOrder.completed_at)}
                 </p>
                 <p>
                   <strong>配送方式：</strong>
@@ -521,7 +561,7 @@ export default function AdminOrders() {
                 </p>
                 <p>
                   <strong>付款方式：</strong>
-                  {selectedOrder.paymentMethod || "—"}
+                  {selectedOrder.paymentMethod || selectedOrder.payment || "—"}
                 </p>
               </div>
             </div>
@@ -538,10 +578,7 @@ export default function AdminOrders() {
                       key={item.id || `${item.name}-${index}`}
                     >
                       <img
-                        src={
-                          item.image ||
-                          "https://placehold.co/120x120?text=Product"
-                        }
+                        src={getImageUrl(item.image)}
                         alt={item.name}
                       />
                       <div className="admin-order-product-info">
