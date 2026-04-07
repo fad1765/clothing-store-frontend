@@ -5,6 +5,33 @@ import "../styles/wishlist.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+function getImageUrl(path) {
+  if (!path) return "";
+
+  const imagePath = String(path).trim();
+
+  if (
+    imagePath.startsWith("http://") ||
+    imagePath.startsWith("https://")
+  ) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/images")) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/uploads")) {
+    return `${API_BASE_URL}${imagePath}`;
+  }
+
+  if (imagePath.startsWith("uploads/")) {
+    return `${API_BASE_URL}/${imagePath}`;
+  }
+
+  return imagePath;
+}
+
 export default function Wishlist() {
   const { user } = useAuth();
 
@@ -45,7 +72,19 @@ export default function Wishlist() {
         return;
       }
 
-      setWishlistItems(data);
+      const normalizedData = Array.isArray(data)
+        ? data.map((item) => ({
+            ...item,
+            image: getImageUrl(item.image),
+            images: Array.isArray(item.images)
+              ? item.images.map((img) => getImageUrl(img))
+              : item.image
+                ? [getImageUrl(item.image)]
+                : [],
+          }))
+        : [];
+
+      setWishlistItems(normalizedData);
     } catch (error) {
       console.error("收藏清單載入失敗：", error);
       setWishlistItems([]);

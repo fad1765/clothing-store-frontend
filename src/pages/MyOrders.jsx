@@ -18,6 +18,33 @@ const STATUS_STEP = {
   cancelled: 0,
 };
 
+function getImageUrl(path) {
+  if (!path) return "/placeholder.png";
+
+  const imagePath = String(path).trim();
+
+  if (
+    imagePath.startsWith("http://") ||
+    imagePath.startsWith("https://")
+  ) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/images")) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/uploads")) {
+    return `${API_BASE_URL}${imagePath}`;
+  }
+
+  if (imagePath.startsWith("uploads/")) {
+    return `${API_BASE_URL}/${imagePath}`;
+  }
+
+  return imagePath;
+}
+
 function formatOrderNumber(order) {
   const date = new Date(order?.createdAt || order?.created_at);
 
@@ -49,7 +76,18 @@ function OrderDetailInline({ orderId, status }) {
       })
       .then((data) => {
         if (!isMounted) return;
-        setDetail(data);
+
+        const normalizedDetail = {
+          ...data,
+          items: Array.isArray(data.items)
+            ? data.items.map((item) => ({
+                ...item,
+                image: getImageUrl(item.image),
+              }))
+            : [],
+        };
+
+        setDetail(normalizedDetail);
         setDetailError("");
         setDetailLoading(false);
       })

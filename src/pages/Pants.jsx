@@ -6,6 +6,33 @@ import "../styles/category.css";
 const PRODUCTS_PER_PAGE = 8;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+function getImageUrl(path) {
+  if (!path) return "";
+
+  const imagePath = String(path).trim();
+
+  if (
+    imagePath.startsWith("http://") ||
+    imagePath.startsWith("https://")
+  ) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/images")) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/uploads")) {
+    return `${API_BASE_URL}${imagePath}`;
+  }
+
+  if (imagePath.startsWith("uploads/")) {
+    return `${API_BASE_URL}/${imagePath}`;
+  }
+
+  return imagePath;
+}
+
 export default function Pant() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [products, setProducts] = useState([]);
@@ -17,7 +44,16 @@ export default function Pant() {
     fetch(`${API_BASE_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
-        const pantProducts = data.filter((p) => p.category === "pant");
+        const pantProducts = data
+          .filter((p) => p.category === "pant")
+          .map((p) => ({
+            ...p,
+            image: getImageUrl(p.image),
+            images: Array.isArray(p.images)
+              ? p.images.map((img) => getImageUrl(img))
+              : [],
+          }));
+
         setProducts(pantProducts);
         setLoading(false);
       })

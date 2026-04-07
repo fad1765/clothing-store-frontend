@@ -6,18 +6,56 @@ import "../styles/category.css";
 const PRODUCTS_PER_PAGE = 8;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+function getImageUrl(path) {
+  if (!path) return "";
+
+  const imagePath = String(path).trim();
+
+  if (
+    imagePath.startsWith("http://") ||
+    imagePath.startsWith("https://")
+  ) {
+    return imagePath;
+  }
+
+  // 舊的前端靜態圖片
+  if (imagePath.startsWith("/images")) {
+    return imagePath;
+  }
+
+  // 後端 uploads 圖片
+  if (imagePath.startsWith("/uploads")) {
+    return `${API_BASE_URL}${imagePath}`;
+  }
+
+  if (imagePath.startsWith("uploads/")) {
+    return `${API_BASE_URL}/${imagePath}`;
+  }
+
+  return imagePath;
+}
+
 export default function Clothing() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortType, setSortType] = useState("latest");
   const [currentPage, setCurrentPage] = useState(1);
-  console.log(products);
+
   useEffect(() => {
     fetch(`${API_BASE_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
-        const clothingProducts = data.filter((p) => p.category === "clothing");
+        const clothingProducts = data
+          .filter((p) => p.category === "clothing")
+          .map((p) => ({
+            ...p,
+            image: getImageUrl(p.image),
+            images: Array.isArray(p.images)
+              ? p.images.map((img) => getImageUrl(img))
+              : [],
+          }));
+
         setProducts(clothingProducts);
         setLoading(false);
       })

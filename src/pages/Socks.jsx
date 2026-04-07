@@ -4,8 +4,34 @@ import ProductModal from "../components/ProductModal";
 import "../styles/category.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 const PRODUCTS_PER_PAGE = 8;
+
+function getImageUrl(path) {
+  if (!path) return "";
+
+  const imagePath = String(path).trim();
+
+  if (
+    imagePath.startsWith("http://") ||
+    imagePath.startsWith("https://")
+  ) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/images")) {
+    return imagePath;
+  }
+
+  if (imagePath.startsWith("/uploads")) {
+    return `${API_BASE_URL}${imagePath}`;
+  }
+
+  if (imagePath.startsWith("uploads/")) {
+    return `${API_BASE_URL}/${imagePath}`;
+  }
+
+  return imagePath;
+}
 
 export default function Sock() {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -18,7 +44,16 @@ export default function Sock() {
     fetch(`${API_BASE_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
-        const sockProducts = data.filter((p) => p.category === "sock");
+        const sockProducts = data
+          .filter((p) => p.category === "sock")
+          .map((p) => ({
+            ...p,
+            image: getImageUrl(p.image),
+            images: Array.isArray(p.images)
+              ? p.images.map((img) => getImageUrl(img))
+              : [],
+          }));
+
         setProducts(sockProducts);
         setLoading(false);
       })
