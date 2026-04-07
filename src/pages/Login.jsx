@@ -127,7 +127,7 @@ export default function Login() {
 
         {!isRegister && (
           <p className="login-hint">
-            測試帳號：admin@admin ／ 密碼：123456
+            後台管理員：admin@gmail.com ／ 密碼：123456
           </p>
         )}
       </div>
