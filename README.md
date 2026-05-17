@@ -117,15 +117,34 @@ npm run preview
 
 ## 示意圖（Screenshots）
 
-下面為專案主要頁面截圖（檔案位於 `public/images/`），僅標示對應頁面：
+下面為專案主要頁面截圖（檔案位於 `public/images/`）：
 
-- `public/images/homepage.png` — 首頁
-- `public/images/clothes.png` — 衣服分類頁
-- `public/images/productmodal.png` — 商品詳情Modal
-- `public/images/cart.png` — 購物車
-- `public/images/myorder.png` — 我的訂單
-- `public/images/mycollect.png` — 我的收藏
-- `public/images/products.png` — 商品總覽(後台)
-- `public/images/orders.png` — 訂單管理（後台）
-- `public/images/coupons.png` — 優惠券(後台)
-- `public/images/baseboard.png` — 管理員 Baseboard 儀表板(後台)
+### 首頁
+![首頁](public/images/homepage.png)
+
+### 衣服分類頁
+![衣服分類頁](public/images/clothes.png)
+
+### 商品詳情 Modal
+![商品詳情 Modal](public/images/productmodal.png)
+
+### 購物車
+![購物車](public/images/cart.png)
+
+### 我的訂單
+![我的訂單](public/images/myorder.png)
+
+### 我的收藏
+![我的收藏](public/images/mycollect.png)
+
+### 商品總覽（後台）
+![商品總覽](public/images/products.png)
+
+### 訂單管理（後台）
+![訂單管理](public/images/orders.png)
+
+### 優惠券（後台）
+![優惠券](public/images/coupons.png)
+
+### 管理員 Baseboard 儀表板（後台）
+![管理員 Baseboard 儀表板](public/images/baseboard.png)
