@@ -1,6 +1,6 @@
 ﻿# Clothing-Store 前端專案
 
-這是一個使用 React + Vite 建置的完整電商前端專案，支援商品瀏覽、分類、購物車、會員登入註冊、願望清單與後台管理功能。專案架構採用 SPA 設計，並可透過 `.env` 串接後端 API。
+使用 React + Vite 建置的完整電商前端專案，支援商品瀏覽、分類、購物車、會員登入註冊、願望清單與後台管理功能。專案架構採用 SPA 設計，並可透過 `.env` 串接後端 API。
 
 ## 主要功能
 
@@ -12,6 +12,7 @@
 - 會員系統：登入 / 註冊、權限驗證、後台路由保護
 - 願望清單與我的訂單頁面
 - 後台管理：商品管理、訂單管理、使用者管理、優惠券管理
+- 管理員儀表板（Baseboard）：即時營運與商品監控儀表板，包含銷售概況、庫存警示、熱門商品與關鍵 KPI
 
 ## 技術
 
@@ -26,7 +27,7 @@
 ## 專案結構
 
 - `src/App.jsx`：應用路由與全域佈局配置
-- `src/main.jsx`：React 應用入口
+- `src/main.jsx`：React 應用入口 
 - `src/layout/`：`Layout`、`Header`、`Sidebar`、`Footer` 等主要頁面佈局
 - `src/pages/`：首頁、分類頁、購物車、登入、我的訂單、管理後台等頁面
 - `src/components/`：可重用元件，例如 `ProductCard`、`ProductModal`、`CartDrawer`、`Slider`、模態視窗
@@ -57,8 +58,6 @@
 ```env
 VITE_API_BASE_URL=http://localhost:8000
 ```
-
-若後端服務部署在其他位置，請修改此值。
 
 ## 安裝與執行
 
@@ -105,7 +104,7 @@ npm run preview
 - 會員登入資訊會儲存在 `localStorage`
 - `CartProvider` 會自動同步會員購物車與訪客購物車
 - 管理員專區由 `RequireAdmin` 保護，需判斷後端帳號角色
-- 登入頁面提示管理員帳號：`admin@gmail.com` / `123456`
+- 登入頁面提示管理員帳號：`admin@admin` / `123456`
 
 ## 專案特色
 
@@ -114,3 +113,19 @@ npm run preview
 - 支援商品排序、分頁、評論、收藏、多圖展示
 - 可與後端 API 串接，具備可擴充性
 - 採用元件化架構，提升維護與可重用性
+- 內建管理員 Baseboard 儀表板，提供即時營運指標與商品健康檢視，利於快速決策與監控
+
+## 示意圖（Screenshots）
+
+下面為專案主要頁面截圖（檔案位於 `public/images/`），僅標示對應頁面：
+
+- `public/images/homepage.png` — 首頁
+- `public/images/clothes.png` — 衣服分類頁
+- `public/images/productmodal.png` — 商品詳情Modal
+- `public/images/cart.png` — 購物車
+- `public/images/myorder.png` — 我的訂單
+- `public/images/mycollect.png` — 我的收藏
+- `public/images/products.png` — 商品總覽(後台)
+- `public/images/orders.png` — 訂單管理（後台）
+- `public/images/coupons.png` — 優惠券(後台)
+- `public/images/baseboard.png` — 管理員 Baseboard 儀表板(後台)
